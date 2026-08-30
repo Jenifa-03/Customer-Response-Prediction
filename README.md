@@ -85,9 +85,7 @@ The **Marketing Campaign** dataset (`data/marketing_campaign.xlsx`) is a widely 
 | Duplicate records | 0 |
 | Class balance | 85.1% did not respond (0) · 14.9% responded (1) |
 
-<p align="center">
-  <img src="assets/class_imbalance.png" alt="Class imbalance in the Response target variable" width="600">
-</p>
+![Class imbalance in the Response target variable](assets/class_imbalance.png)
 
 Because the target is imbalanced, **Accuracy alone is misleading** — Precision, Recall, F1‑score, ROC‑AUC, and Cohen's Kappa were all tracked when comparing configurations.
 
@@ -97,9 +95,7 @@ Because the target is imbalanced, **Accuracy alone is misleading** — Precision
 - Dropped non‑predictive columns: `ID`, `Dt_Customer`, `Z_CostContact`, `Z_Revenue`.
 - Categorical encoding of `Education` and `Marital_Status`.
 
-<p align="center">
-  <img src="assets/correlation_heatmap.png" alt="Correlation heatmap of dataset features" width="700">
-</p>
+![Correlation heatmap of dataset features](assets/correlation_heatmap.png)
 
 ## Methodology
 
@@ -107,9 +103,7 @@ Because the target is imbalanced, **Accuracy alone is misleading** — Precision
 
 **2. Proposed model — ANN‑SVM.** An ANN is trained purely as a **feature extractor**; the activations from a chosen hidden layer are then classified by a non‑linear SVM (RBF or Exponential kernel), instead of the ANN's own output layer.
 
-<p align="center">
-  <img src="assets/methodology_diagram.png" alt="ANN feature-extraction into SVM classifier methodology diagram" width="500">
-</p>
+![ANN feature-extraction into SVM classifier methodology diagram](assets/methodology_diagram.png)
 
 Five ANN depths/widths were tested, and for each, features could be tapped from any of its hidden layers and classified with either kernel — yielding **22 total ANN‑SVM configurations**:
 
@@ -123,9 +117,7 @@ Five ANN depths/widths were tested, and for each, features could be tapped from 
 
 **3. Epoch selection.** A held‑out validation split (20% of training data) was used to identify, for every architecture/hidden‑layer/kernel combination, the epoch at which validation performance peaks. Plotting all 22 configurations together produced the combined convergence curve below, which showed that validation performance had stabilised by **2,000 epochs** across the board — so every model was subsequently trained for a full 2,000 epochs before its single, final evaluation on the untouched test set.
 
-<p align="center">
-  <img src="assets/epoch_optimization_convergence.png" alt="Validation accuracy vs. epoch for all 22 ANN-SVM models" width="750">
-</p>
+![Validation accuracy vs. epoch for all 22 ANN-SVM models](assets/epoch_optimization_convergence.png)
 
 *This combined curve was built up from the individual per‑architecture F1‑vs‑epoch curves described in the [Epoch Optimization](#epoch-optimization) section below — each one was used to locate that architecture's own best epoch before the overall convergence point was determined.*
 
@@ -156,14 +148,10 @@ Before settling on a shared training length, **each individual ANN‑SVM configu
 
 A few examples of these per‑architecture curves:
 
-<p align="center">
-  <img src="assets/epoch_optimization_by_architecture/Input-1000-500-50-SVM_HiddenLayer3_EXPONENTIAL.png" alt="Epoch optimization: Input-1000-500-50-SVM, Hidden Layer 3, Exponential kernel" width="480">
-  <img src="assets/epoch_optimization_by_architecture/Input-2000-1000-100-SVM_HiddenLayer3_RBF.png" alt="Epoch optimization: Input-2000-1000-100-SVM, Hidden Layer 3, RBF kernel" width="480">
-</p>
-<p align="center">
-  <img src="assets/epoch_optimization_by_architecture/Input-2000-1000-50-SVM_HiddenLayer2_RBF.png" alt="Epoch optimization: Input-2000-1000-50-SVM, Hidden Layer 2, RBF kernel" width="480">
-  <img src="assets/epoch_optimization_by_architecture/Input-2000-1000-50-SVM_HiddenLayer1_EXPONENTIAL.png" alt="Epoch optimization: Input-2000-1000-50-SVM, Hidden Layer 1, Exponential kernel" width="480">
-</p>
+![Epoch optimization: Input-1000-500-50-SVM, Hidden Layer 3, Exponential kernel](assets/epoch_optimization_by_architecture/Input-1000-500-50-SVM_HiddenLayer3_EXPONENTIAL.png)
+![Epoch optimization: Input-2000-1000-100-SVM, Hidden Layer 3, RBF kernel](assets/epoch_optimization_by_architecture/Input-2000-1000-100-SVM_HiddenLayer3_RBF.png)
+![Epoch optimization: Input-2000-1000-50-SVM, Hidden Layer 2, RBF kernel](assets/epoch_optimization_by_architecture/Input-2000-1000-50-SVM_HiddenLayer2_RBF.png)
+![Epoch optimization: Input-2000-1000-50-SVM, Hidden Layer 1, Exponential kernel](assets/epoch_optimization_by_architecture/Input-2000-1000-50-SVM_HiddenLayer1_EXPONENTIAL.png)
 
 The remaining 14 per‑architecture curves are available in the [`epoch_optimization_by_architecture/`](assets/epoch_optimization_by_architecture/) folder. Notably, **Exponential‑kernel configurations tapped from Hidden Layer 1** consistently underperformed (F1 around 5–9%), reinforcing the report's finding that deeper feature taps (Hidden Layer 2 or 3) are needed for the Exponential kernel to work well, while RBF‑kernel models were comparatively stable across all three tap points.
 
